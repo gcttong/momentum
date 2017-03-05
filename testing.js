@@ -22,7 +22,27 @@ dynamodb.query(params, function (err, data) {
   if (err) console.log(err, err.stack); // an error occurred
   else     
   {
-console.log(data.Items);  
+//console.log(data.Items);  
+let arr=data.Items;
+let newArray=[];
+for(let i=0; i<arr.length;i++)
+{
+    let stuff=arr[i];
+    newArray[i]=stuff.Phrase.S;
+}
+var hist = {};
+newArray.map( function (a) { if (a in hist) hist[a] ++; else hist[a] = 1; } );
+console.log(hist);
 
-  }           // successful response
+var parsed = hist;
+
+var array = [];
+
+for(var x in parsed){
+  array.push(parsed[x]);
+}
+console.log(array);
+
+console.log(Math.max.apply(null, array));
+  }         // successful response
 });
