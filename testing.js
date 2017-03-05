@@ -25,13 +25,16 @@ dynamodb.query(params, function (err, data) {
 //console.log(data.Items);  
 let arr=data.Items;
 let newArray=[];
+let extraArray=[]
 for(let i=0; i<arr.length;i++)
 {
     let stuff=arr[i];
-    newArray[i]=stuff.Phrase.S;
+    newArray[i]=new Date(parseInt(stuff.Timestamp.S));
+    extraArray[i]= newArray[i].getDate() +" "+stuff.Phrase.S;
+   
 }
 var hist = {};
-newArray.map( function (a) { if (a in hist) hist[a] ++; else hist[a] = 1; } );
+extraArray.map( function (a) { if (a in hist) hist[a] ++; else hist[a] = 1; } );
 console.log(hist);
 
 var parsed = hist;
