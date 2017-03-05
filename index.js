@@ -1,29 +1,15 @@
-var express = require('express'),
-    app = express.createServer();
-var twilioAPI = require('twilio-api'),
-    cli = new twilioAPI.Client(ACCOUNT_SID, AUTH_TOKEN);
-app.use(cli.middleware() );
-app.listen(PORT_NUMBER);
-//Get a Twilio application and register it 
-cli.account.getApplication(APPLICATION_SID, function(err, app) {
-    if(err) throw err;
-    app.register();
-    app.on('incomingCall', function(call) {
-        //Use the Call object to generate TwiML 
-        call.say("This is a test. Goodbye!");
-    });
-    app.makeCall("+12225551234", "+13335551234", function(err, call) {
-        if(err) throw err;
-        call.on('connected', function(status) {
-            //Called when the caller picks up 
-            call.say("This is a test. Goodbye!");
-        });
-        call.on('ended', function(status, duration) {
-            //Called when the call ends 
-        });
-    });
+var accountSid = 'ACbd2be9e74e61fed509df8104f20154c0'; // Your Account SID from www.twilio.com/console
+var authToken = '17c74746799db6c0ce73e31ef34bfe1d';   // Your Auth Token from www.twilio.com/console
+
+var twilio = require('twilio');
+var client = new twilio.RestClient(accountSid, authToken);
+
+client.messages.create({
+    body: 'Hello from Gary',
+    to: '+16472423389',  // Text this number
+    from: '+12048001024' // From a valid Twilio number
+}, function(err, message) {
+    if(err) {
+        console.error(err.message);
+    }
 });
-/*
-... more sample code coming soon...
-For now, check the /tests folder
-*/
