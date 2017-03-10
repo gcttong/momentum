@@ -1,7 +1,7 @@
 let AWS = require('aws-sdk');
 const aws = {
-    accessKeyId: 'AKIAJXMNICHPNEZIQAAA',
-    secretAccessKey: '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',
+    accessKeyId: '',
+    secretAccessKey: '',
     region: 'us-east-1'
   };
 
