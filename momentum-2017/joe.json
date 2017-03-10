@@ -1,0 +1,37 @@
+{
+  "user1": {
+    "questions": [
+      [{
+        "timestamp": "1488726981978",
+        "frequency": "10"
+      }, {
+        "timestamp": "1488726982978",
+        "frequency": "1"
+      }, {
+        "timestamp": "1488726911978",
+        "frequency": "14"
+      }, {
+        "timestamp": "1488729981978",
+        "frequency": "1"
+      }],
+      [{
+        "timestamp": "1488726981978",
+        "frequency": "10"
+      }, {
+        "timestamp": "1488726983978",
+        "frequency": "5"
+      }, {
+        "timestamp": "1488726987978",
+        "frequency": "3"
+      }]
+    ]
+  },
+  "user2": {
+    "questions": [
+      [{
+        "timestamp": "1488726982978",
+        "frequency": "3"
+      }]
+    ]
+  }
+}

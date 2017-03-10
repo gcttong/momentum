@@ -1,0 +1,93 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Momentum</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="memorybankstyles.css?v=1.0">
+  <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+  <ul class="navbar"><li class="nav-logo">memo</li><li class="nav-contact">Sign Out</li></ul>
+  <div class="container">
+    <h1 class="headline">Memory Chest</h1>
+    <p class="instruction">"Okay Alexa, <strong>tell</strong> memo" - This prompts memo to store and record what you tell her</p>
+    <p class="instruction">"Okay Alexa, <strong>ask</strong> memo" - This prompts memo to answer questions that you've previously stored.</p>
+    <hr class="bar"/>
+    <p class="history">HISTORY</p>
+    <div id="facts"></div>
+  </div>
+  <script>
+    $(document).ready(function() {
+      window.setInterval(function repeat() {
+        $.ajax({
+          url: "https://api.api.ai/v1/intents?v=20150910",
+          beforeSend: function(jqXHR, settings) {
+            jqXHR.setRequestHeader("Authorization", "Bearer 61c1fdd73cf149ceb049cf12a94795e4");
+          },
+          dataType: "JSON",
+          success: function(data) {
+            console.log("success");
+            console.log(data);
+            console.log('checking for updates');
+            if (!window.myfacts || data.length != window.myfacts.length) {
+              window.myfacts = data;
+              console.log('checking for updates');
+
+              var factsContainer = $("#facts");
+
+              var ids = window.myfacts.map(function(fact) { return fact.id });
+              console.log("ids");
+              console.log(ids);
+
+              var constructUrl = function(id) {
+                return "https://api.api.ai/v1/intents/" + id + "?v=20150910";
+              }
+
+              $.when.apply($, ids.map(function(id) {
+                  return $.ajax({
+                    url: constructUrl(id),
+                    beforeSend: function(jqXHR, settings) {
+                      jqXHR.setRequestHeader("Authorization", "Bearer 61c1fdd73cf149ceb049cf12a94795e4");
+                    },
+                    dataType: "JSON"
+                  });
+              })).done(function() {
+                  var results = [];
+                  // there will be one argument passed to this callback for each ajax call
+                  // each argument is of this form [data, statusText, jqXHR]
+                  for (var i = 0; i < arguments.length; i++) {
+                      results.push(arguments[i][0]);
+                  }
+                  // all data is now in the results array in order
+                  for (var i=0; i< window.myfacts.length; ++i) {
+                    var myfact = window.myfacts[i];
+
+                    factsContainer.prepend('<div class="fact"> My ' + myfact.name + ' is ' + results[i].responses[0].messages[0].speech + '</div><hr class="light-bar"/>');
+                  }
+              });
+            }
+          },
+          error: function(data) {
+            console.log("error");
+          }
+        });
+
+        return repeat;
+      }(), 300000000);
+    });
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
